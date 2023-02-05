@@ -1,0 +1,26 @@
+{
+  "name": "cloudwatch-winston-logger",
+  "version": "1.0.0",
+  "description": "hello",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "winston": "^3.8.2",
+
+    "@aws-sdk/client-cloudwatch-logs": "^3.264.0",
+    "@types/winston": "^2.4.4",
+    "aws-sdk": "^2.1309.0",
+    "bunyan": "^1.8.15",
+    "bunyan-format": "^0.2.1",
+    "crypto-js": "^4.1.1",
+    "node-fetch": "^2.6.7",
+    "pino": "^8.8.0",
+    "pino-pretty": "^9.1.1",
+    "winston-cloudwatch": "^6.1.1",
+    "winston-console-transport": "^1.1.9"
+  }
+}
