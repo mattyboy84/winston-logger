@@ -1,4 +1,6 @@
 const { createLogger, format, transports } = require('winston');
+const { combine, json, printf } = format;
+//const CloudWatch = require('winston-cloudwatch');
 // https://www.tabnine.com/code/javascript/functions/winston/format
 
 
@@ -18,20 +20,36 @@ const metaParameters = {
 };
 
 class Logger {
-  constructor(...metadata) {
+  constructor(context, ...metadata) {
+    metaParameters.awsRequestId = context.awsRequestId;
     Object.assign(metaParameters, ...metadata);
 
     const consoleTransport = new transports.Console({
       handleExceptions: true,
       json: true,
     });
+    //
+    //
     loggerTransports.push(consoleTransport);
     //
 
-    const myFormatter = format((log) => {
+    const metadataFormatter = format((log) => {
       Object.assign(log, metaParameters)
       return log;
-    })();
+    });
+    //
+    const errorFormatter = format((log) => {
+      //console.log(`a`, log);
+      log.stack = log.stack.split('\n');
+      //Object.assign(log, metaParameters)
+      return log;
+    });
+
+    //for formatting in CW - stops formatted json from all being on seperate lines
+    const replaceNewlinesWithCarriageReturnsFormatter = format((info) => {
+      info.message = info.message.replace(/\n/g, "\r");
+      return info;
+    });
     //
 
     const logger = createLogger({
@@ -40,10 +58,12 @@ class Logger {
       transports: loggerTransports,
       format: format.combine(
         format.errors({ stack: true }),
-        myFormatter,
-        format.json(),
-        //format.prettyPrint(),
+        metadataFormatter(),
+        errorFormatter(),
+        format.json(/*{ space: 2}*/), //have space 2 when running local?
+        replaceNewlinesWithCarriageReturnsFormatter()
       ),
+      exitOnError: true
     });
 
     /**
@@ -74,11 +94,3 @@ class Logger {
 module.exports = {
   Logger,
 };
-
-//(async() => {
-//  logger = new Logger();
-//  logParameters.par1 = "a";
-//  logger.info('message1');
-//  logParameters.par2 = "b";
-//  logger.info('message2');
-//})();

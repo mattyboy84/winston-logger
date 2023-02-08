@@ -1,8 +1,10 @@
 const { Logger } = require('./utils/winstonLogger');
 
 async function handler(event, context) {
+  //console.log(JSON.stringify(context));
+  //console.log(JSON.stringify(process.env));
+  let logger = new Logger(context, {metadata0: 'xyz'} );
   try {
-    let logger = new Logger( {metadata0: 'xyz'} );
     //logger.info(event);
     //logger.emergency('123');
     //
@@ -18,8 +20,10 @@ async function handler(event, context) {
     logger.http(event);
     logger.removeMetadata('metadata2', 'metadata3');
     logger.report(event);
+    //throw an error
+    await Promise.all(jobs);
   } catch (err) {
-    log.info(`caught err: ${err}`);
+    logger.error(new Error(err));
   }
 };
 
@@ -27,6 +31,6 @@ module.exports = {
   handler
 };
 
-(async() => {
-  await handler({key: 'value'}, {});
-})();
+// (async() => {
+//   await handler({key: 'value'}, {});
+// })();
