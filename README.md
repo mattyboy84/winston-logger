@@ -5,7 +5,7 @@
 
 const { Logger } = require('./utils/winstonLogger');
 
-let logger = new Logger();
+let logger = new Logger(context, { metadata0: 'xyz' });
 
 let metadata1 = "abc";
 let metadata2 = "def";
