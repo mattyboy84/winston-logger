@@ -35,7 +35,7 @@ logger.report(event);
   try {
     await Promise.all(jobs);
   } catch (err) {
-    logger.error(new Error('abcasdasdsda'));
+    logger.error(new Error(err));
   }
 ```
 # Cloudwatch Output
